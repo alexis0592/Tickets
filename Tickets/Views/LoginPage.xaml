@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+    x:Class="Tickets.Views.LoginPage"
+    Title="Login"
+    BindingContext="{Binding Main, Source={StaticResource Locator}}">
+	<ContentPage.Content>
+        <StackLayout
+            VerticalOptions="CenterAndExpand"
+            Padding="30"
+            BindingContext="{Binding Login}">
+            <Entry
+                Placeholder="Ingrese su email"
+                Keyboard="Email"
+                Text="{Binding Email, Mode=TwoWay}">
+            </Entry>
+            <Entry
+                Placeholder="Ingrese su password"
+                Keyboard="Text"
+                IsPassword="true"
+                Text="{Binding Password, Mode=TwoWay}">
+            </Entry>
+            <Button
+                Command="{Binding LoginCommand}"
+                HorizontalOptions="FillAndExpand"
+                BackgroundColor="Blue"
+                HeightRequest="40"
+                BorderRadius="20"
+                Text="Login"
+                TextColor="White">
+            </Button>
+        </StackLayout>
+	</ContentPage.Content>
+</ContentPage>
