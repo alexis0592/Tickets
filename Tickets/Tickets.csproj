@@ -32,6 +32,9 @@
     <EmbeddedResource Include="Views\LoginPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\CheckTicketPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -48,6 +51,11 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Response.cs" />
     <Compile Include="Services\DialogService.cs" />
+    <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Views\CheckTicketPage.xaml.cs">
+      <DependentUpon>CheckTicketPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\CheckTicketViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core">

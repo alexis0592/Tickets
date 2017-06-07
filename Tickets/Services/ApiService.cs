@@ -11,18 +11,12 @@ namespace Tickets.Services
     public class ApiService
     {
 
-        public async Task<User> Login(string urlBase, string servicePrefix,
-                                          string controller, User model){
+        public async Task<Response> Login(string urlBase, string servicePrefix,
+                                          string controller, Dictionary<string , string> model){
             User user = null;
             try{
-                //var request = JsonConvert.SerializeObject(model);
 
-                var values = new Dictionary<string, string>{
-                    {"Email", model.Email},
-                    {"Password", model.Password}
-                };
-
-                var request = new FormUrlEncodedContent(values);
+                var request = new FormUrlEncodedContent(model);
 
 				//var content = new StringContent(request, Encoding.UTF8, "application/json");
 				var client = new HttpClient();
@@ -32,17 +26,29 @@ namespace Tickets.Services
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    return user;
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = response.StatusCode.ToString()
+                    };
                 }
 
                 var result = await response.Content.ReadAsStringAsync();
                 var newRecord = JsonConvert.DeserializeObject<User>(result);
                 user = newRecord;
 
-                return user;
+                return new Response
+                {
+                    IsSuccess = true,
+                    Message = "Login OK",
+                    Result = newRecord
+                };
             }catch(Exception e){
-                return user;
-
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = e.Message
+                };
             }
             
         }

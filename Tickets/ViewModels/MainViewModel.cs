@@ -9,6 +9,12 @@ namespace Tickets.ViewModels
             get;
             set;
         }
+
+        public CheckTicketViewModel CheckTicket
+        {
+            get;
+            set;
+        }
         #endregion
 
         public MainViewModel()

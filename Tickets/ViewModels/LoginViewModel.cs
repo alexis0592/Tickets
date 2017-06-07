@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using Tickets.Models;
@@ -12,6 +13,7 @@ namespace Tickets.ViewModels
         #region Attributes
         private ApiService apiService;
         private DialogService dialogService;
+        private NavigationService navigationService;
         #endregion
 
         #region Properties
@@ -28,6 +30,7 @@ namespace Tickets.ViewModels
             instance = this;
             this.apiService = new ApiService();
             this.dialogService = new DialogService();
+            this.navigationService = new NavigationService();
         }
 		#endregion
 
@@ -67,15 +70,21 @@ namespace Tickets.ViewModels
 				return;
             }
 
-            var response = await apiService.Login("http://checkticketsback.azurewebsites.net",
-                                                  "/api", "/Users/Login", new User{ Email = Email,
-                                                                            Password = Password});
-            UserLogged = response;
+			var values = new Dictionary<string, string>{
+					{"Email", Email},
+					{"Password", Password}
+				};
 
-            if(response == null){
-                await dialogService.ShowMessage("Error", "Usuario no registrado");
+            var response = await apiService.Login("http://checkticketsback.azurewebsites.net",
+                                                  "/api", "/Users/Login", values);
+            UserLogged = (User)response.Result;
+
+            if(!response.IsSuccess){
+                await dialogService.ShowMessage("Error", response.Message);
                 return;
             }
+
+            await navigationService.Navigate("CheckTicketPage");
         }
         #endregion
     }
