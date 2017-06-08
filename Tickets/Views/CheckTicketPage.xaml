@@ -4,12 +4,39 @@
     x:Class="Tickets.Views.CheckTicketPage"
     Title="Check Ticket"
     BindingContext="{Binding Main, Source={StaticResource Locator}">
-	<ContentPage.Content>
-        <StackLayout
-            Padding="8">
-            <Label
-                Text="CheckTicket Page">
-            </Label>
-        </StackLayout>
-	</ContentPage.Content>
+    <ContentPage.Content>
+        <ScrollView
+            BindingContext="{Binding CheckTicket}">
+            <StackLayout
+                BackgroundColor="Silver"
+                VerticalOptions="CenterAndExpand"
+                Padding="8">
+                <Label
+                    HorizontalOptions="Center"
+                    Text="Ticket Code">
+                </Label>
+                <Entry
+                    Text="{Binding TicketCode, Mode=TwoWay}"
+                    Placeholder="Enter Ticket Code"
+                    Keyboard="Text">
+                </Entry>
+                <Label
+                    Text="{Binding CheckTicketText}"
+                    TextColor="{Binding LabelTextColor}"
+                    FontSize="20"
+                    HorizontalOptions="Center">
+                </Label>
+                <Button
+                    Command="{Binding CheckCommand}"
+                    BackgroundColor="Blue"
+                    HorizontalOptions="FillAndExpand"
+                    HeightRequest="40"
+                    BorderRadius="20"
+                    Text="Check"
+                    TextColor="White">
+                </Button>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
 </ContentPage>
+

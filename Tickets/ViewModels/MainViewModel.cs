@@ -19,7 +19,23 @@ namespace Tickets.ViewModels
 
         public MainViewModel()
         {
+            instance = this;
             Login = new LoginViewModel();
+            //CheckTicket = new CheckTicketViewModel();
         }
-    }
+
+		#region Singleton
+        static MainViewModel instance;
+
+        public static MainViewModel GetInstance()
+		{
+			if (instance == null)
+			{
+                instance = new MainViewModel();
+			}
+
+			return instance;
+		}
+		#endregion
+	}
 }

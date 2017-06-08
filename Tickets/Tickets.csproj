@@ -56,6 +56,7 @@
       <DependentUpon>CheckTicketPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\CheckTicketViewModel.cs" />
+    <Compile Include="Models\Ticket.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core">

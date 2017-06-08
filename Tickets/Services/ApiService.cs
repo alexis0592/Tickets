@@ -11,18 +11,17 @@ namespace Tickets.Services
     public class ApiService
     {
 
-        public async Task<Response> Login(string urlBase, string servicePrefix,
-                                          string controller, Dictionary<string , string> model){
-            User user = null;
+        public async Task<Response> Login<T>(string urlBase, string servicePrefix,
+                                          string controller, T model){
             try{
 
-                var request = new FormUrlEncodedContent(model);
-
-				//var content = new StringContent(request, Encoding.UTF8, "application/json");
+                //var request = new FormUrlEncodedContent(model);
+                var request = JsonConvert.SerializeObject(model);
+				var content = new StringContent(request, Encoding.UTF8, "application/json");
 				var client = new HttpClient();
 				client.BaseAddress = new Uri(urlBase);
 				var url = string.Format("{0}{1}", servicePrefix, controller);
-                var response = await client.PostAsync(url, request);
+                var response = await client.PostAsync(url, content);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -34,8 +33,7 @@ namespace Tickets.Services
                 }
 
                 var result = await response.Content.ReadAsStringAsync();
-                var newRecord = JsonConvert.DeserializeObject<User>(result);
-                user = newRecord;
+                var newRecord = JsonConvert.DeserializeObject<T>(result);
 
                 return new Response
                 {
@@ -51,6 +49,43 @@ namespace Tickets.Services
                 };
             }
             
+        }
+
+
+        public async Task<Response> GetTicket<T>(string urlBase, string servicePrefix,
+                                                 string controller, string ticketCode){
+            try{
+
+				var client = new HttpClient();
+				client.BaseAddress = new Uri(urlBase);
+                var url = string.Format("{0}{1}{2}", servicePrefix, controller, ticketCode);
+                var response = await client.GetAsync(url);
+
+                if(!response.IsSuccessStatusCode){
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = response.StatusCode.ToString()
+                    };
+                }
+
+                var result = await response.Content.ReadAsStringAsync();
+                var ticketResponse = JsonConvert.DeserializeObject<T>(result);
+
+                return new Response
+                {
+                    IsSuccess = true,
+                    Message = "Ok",
+                    Result = ticketResponse
+                };
+                
+            }catch(Exception e){
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = e.Message
+                };                
+            }
         }
     }
 }

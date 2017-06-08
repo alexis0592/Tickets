@@ -9,6 +9,9 @@
             VerticalOptions="CenterAndExpand"
             Padding="30"
             BindingContext="{Binding Login}">
+            <ActivityIndicator 
+                    IsRunning="{Binding IsRunning}">
+            </ActivityIndicator>
             <Entry
                 Placeholder="Ingrese su email"
                 Keyboard="Email"

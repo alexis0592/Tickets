@@ -14,10 +14,17 @@ namespace Tickets.ViewModels
         private ApiService apiService;
         private DialogService dialogService;
         private NavigationService navigationService;
+        private bool isRunning;
         #endregion
 
         #region Properties
         public User UserLogged
+        {
+            get;
+            set;
+        }
+
+        public bool IsRunning
         {
             get;
             set;
@@ -75,15 +82,21 @@ namespace Tickets.ViewModels
 					{"Password", Password}
 				};
 
+            IsRunning = true;
             var response = await apiService.Login("http://checkticketsback.azurewebsites.net",
-                                                  "/api", "/Users/Login", values);
+                                                  "/api", "/Users/Login", new User{Email = Email,
+                                                                            Password = Password});
             UserLogged = (User)response.Result;
+            IsRunning = false;
 
             if(!response.IsSuccess){
                 await dialogService.ShowMessage("Error", response.Message);
+                IsRunning = false;
                 return;
             }
 
+            var mainVewModel = MainViewModel.GetInstance();
+            mainVewModel.CheckTicket = new CheckTicketViewModel();
             await navigationService.Navigate("CheckTicketPage");
         }
         #endregion
