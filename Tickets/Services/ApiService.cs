@@ -11,11 +11,9 @@ namespace Tickets.Services
     public class ApiService
     {
 
-        public async Task<Response> Login<T>(string urlBase, string servicePrefix,
+        public async Task<Response> Post<T>(string urlBase, string servicePrefix,
                                           string controller, T model){
             try{
-
-                //var request = new FormUrlEncodedContent(model);
                 var request = JsonConvert.SerializeObject(model);
 				var content = new StringContent(request, Encoding.UTF8, "application/json");
 				var client = new HttpClient();
@@ -38,7 +36,7 @@ namespace Tickets.Services
                 return new Response
                 {
                     IsSuccess = true,
-                    Message = "Login OK",
+                    Message = "Response OK",
                     Result = newRecord
                 };
             }catch(Exception e){

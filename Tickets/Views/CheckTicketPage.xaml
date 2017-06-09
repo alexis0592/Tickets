@@ -3,7 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
     x:Class="Tickets.Views.CheckTicketPage"
     Title="Check Ticket"
-    BindingContext="{Binding Main, Source={StaticResource Locator}">
+    BindingContext="{Binding Main, Source={StaticResource Locator}}"
+    BackgroundImage="ticket_background.png">
     <ContentPage.Content>
         <ScrollView
             BindingContext="{Binding CheckTicket}">
@@ -11,6 +12,9 @@
                 BackgroundColor="Silver"
                 VerticalOptions="CenterAndExpand"
                 Padding="8">
+                <ActivityIndicator 
+                    IsRunning="{Binding IsRunning}">
+                </ActivityIndicator>
                 <Label
                     HorizontalOptions="Center"
                     Text="Ticket Code">

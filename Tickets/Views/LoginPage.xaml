@@ -3,12 +3,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
     x:Class="Tickets.Views.LoginPage"
     Title="Login"
-    BindingContext="{Binding Main, Source={StaticResource Locator}}">
+    BindingContext="{Binding Main, Source={StaticResource Locator}}"
+    BackgroundImage="ticket_background.png">
 	<ContentPage.Content>
         <StackLayout
             VerticalOptions="CenterAndExpand"
             Padding="30"
             BindingContext="{Binding Login}">
+            <Image
+                HorizontalOptions="Center"
+                Source="ticket.png">
+            </Image>
             <ActivityIndicator 
                     IsRunning="{Binding IsRunning}">
             </ActivityIndicator>
@@ -26,11 +31,11 @@
             <Button
                 Command="{Binding LoginCommand}"
                 HorizontalOptions="FillAndExpand"
-                BackgroundColor="Blue"
+                BackgroundColor="Silver"
                 HeightRequest="40"
                 BorderRadius="20"
                 Text="Login"
-                TextColor="White">
+                TextColor="Black">
             </Button>
         </StackLayout>
 	</ContentPage.Content>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using Tickets.Models;
@@ -7,8 +8,12 @@ using Tickets.Services;
 
 namespace Tickets.ViewModels
 {
-    public class LoginViewModel : User
+    public class LoginViewModel : User, INotifyPropertyChanged
     {
+        
+        #region Events
+        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
 
         #region Attributes
         private ApiService apiService;
@@ -26,8 +31,15 @@ namespace Tickets.ViewModels
 
         public bool IsRunning
         {
-            get;
-            set;
+            get{
+                return isRunning;
+            }
+            set{
+                if(isRunning != value){
+                    isRunning = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsRunning"));
+                }
+            }
         }
         #endregion
 
@@ -77,23 +89,21 @@ namespace Tickets.ViewModels
 				return;
             }
 
-			var values = new Dictionary<string, string>{
-					{"Email", Email},
-					{"Password", Password}
-				};
 
             IsRunning = true;
-            var response = await apiService.Login("http://checkticketsback.azurewebsites.net",
+            var response = await apiService.Post("http://checkticketsback.azurewebsites.net",
                                                   "/api", "/Users/Login", new User{Email = Email,
                                                                             Password = Password});
             UserLogged = (User)response.Result;
-            IsRunning = false;
+
 
             if(!response.IsSuccess){
                 await dialogService.ShowMessage("Error", response.Message);
                 IsRunning = false;
                 return;
             }
+
+            IsRunning = false;
 
             var mainVewModel = MainViewModel.GetInstance();
             mainVewModel.CheckTicket = new CheckTicketViewModel();

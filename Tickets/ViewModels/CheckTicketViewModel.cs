@@ -18,6 +18,7 @@ namespace Tickets.ViewModels
         private DialogService dialogService;
         private string checkTicketText;
         private string labelTextColor;
+        private bool isRunning;
         #endregion
 
         #region Properties
@@ -43,6 +44,25 @@ namespace Tickets.ViewModels
                 if(labelTextColor != value){
                     labelTextColor = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("LabelTextColor"));
+                }
+            }
+        }
+
+        public Ticket TicketToSave
+        {
+            get;
+            set;
+        }
+
+        public bool IsRunning
+        {
+            get{
+                return isRunning;
+            }
+            set{
+                if(isRunning != value){
+                    isRunning = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsRunning"));
                 }
             }
         }
@@ -80,21 +100,44 @@ namespace Tickets.ViewModels
 				return;
             }
 
+            IsRunning = true;
             var response = await apiService.GetTicket<Ticket>("http://checkticketsback.azurewebsites.net",
                                                               "/api", "/Tickets/", TicketCode);
+            TicketToSave = (Ticket)response.Result;
 
+            IsRunning = false;
             if(!response.IsSuccess){
-                await dialogService.ShowMessage("Error", response.Message);
-                //TODO:Realizar llamado al servicio para almacenar el nuevo ticket
-                CheckTicketText = string.Format("{0}, ALLOW ACCESS", TicketCode);
-                LabelTextColor = "Green";
+                await dialogService.ShowMessage("Save Ticket", "The Ticket you entered would be save");
 
+				CheckTicketText = string.Format("{0}, ALLOW ACCESS", TicketCode);
+				LabelTextColor = "Green";
+
+                TicketToSave = new Ticket();
+                TicketToSave.TicketCode = TicketCode;
+                TicketToSave.DateTime = DateTime.Now.ToLocalTime();
+				var loginViewModel = LoginViewModel.GetInstance();
+                TicketToSave.UserId = loginViewModel.UserLogged.UserId;
+
+                saveTicket(TicketToSave);
                 return;
             }
 
             CheckTicketText = string.Format("{0}, TICKET READ BEFORE!", TicketCode);
             LabelTextColor = "Red";
         }
+
+        private async void saveTicket(Ticket ticket){
+
+            var response = await apiService.Post("http://checkticketsback.azurewebsites.net",
+                                                  "/api", "/Tickets", ticket);
+
+            if(!response.IsSuccess){
+                await dialogService.ShowMessage("Error", "Error al guardar el ticket");
+                return;
+            }
+
+        }
+
         #endregion
     }
 }
